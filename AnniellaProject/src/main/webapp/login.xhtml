@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>MTN Rwanda</title>
+        <h:outputScript name="js/ripple.js" library="ultima-layout" />
+        <h:outputScript name="js/layout.js" library="ultima-layout" />
+    </h:head>
+
+    <h:body styleClass="login-body" style="background-image:linear-gradient(rgba(255,255,255,0.1),rgba(255,255,255,0.3)), 
+    url('./resources/demo/images/home.jpg');">
+    <h:form>
+    <p:growl showDetail="true" autoUpdate="true"/>
+    	 <div class="card login-panel ui-fluid" style="background-color:rgba(255,255,255,0.8); border-radius:10px;">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:graphicImage name="images/logo-ultima.svg" library="ultima-layout" />
+                </div>
+                <div class="ui-g-12">
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText  value="#{loginController.username}"/>
+                        <label>Username</label>
+                    </h:panelGroup>
+                </div>
+                <div class="ui-g-12">
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:password value="#{loginController.password}"/>
+                        <label>Password</label>
+                    </h:panelGroup>
+                </div>
+                <div class="ui-g-12">
+                    <p:commandButton  value="Sign In" ajax="false" action="#{loginController.userLogin}" icon="ui-icon-person" styleClass="amber-btn flat" >
+                   
+                    </p:commandButton>
+                    
+                     <p:menuButton value="Create New Account" icon="ui-icon-help" styleClass="secondary">
+                            <p:menuitem value="Customer" icon="ui-icon-check"  oncomplete="PF('new').show()" update="@widgetVar(new)"/>
+                            <p:separator />
+                            <p:menuitem value="Employee" icon="ui-icon-home" oncomplete="PF('employee').show()" update="@widgetVar(employee)"/>
+                        </p:menuButton>
+                </div>
+            </div>
+        </div>
+    
+    </h:form>
+        <h:form>
+		<p:dialog widgetVar="new" showEffect="clip" hideEffect="clip"
+			width="600" height="500" modal="true"
+			header="Fill all Information About new Account">
+				<img src="./resources/demo/images/logo.jpg" width="100%" height="120px;"/>
+					<p:fieldset legend="Fill Required Info">
+						<p:messages id="msg1" closable="true" autoUpdate="true"
+				showDetail="true" />
+						<p:panel toggleable="true" closable="true">
+							<h4 style="text-align: center; font-weight: bold;">CREATE
+								ACCOUNT</h4>
+
+							<p:panelGrid columns="2" layout="grid"
+								styleClass="ui-panelgrid-blank form-group" style="padding:20px;">
+
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText value="#{registration.customer.firstName}"/>
+									<label>First Name</label>
+								</h:panelGroup>
+
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText value="#{registration.customer.lastName}"/>
+									<label>Last Name</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText value="#{registration.customer.email}"/>
+									<label>Email</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText value="#{registration.customer.phoneNumber}"/>
+									<label>Phone Number</label>
+								</h:panelGroup>
+ 								
+ 								<p:selectOneMenu value="#{registration.locationId}" style="width:90%;margin-top:20px;"> 
+ 								<f:selectItem itemLabel="select province" noSelectionOption="true"/> 
+								<f:selectItems value="#{registration.locationList}" var="one" itemLabel="#{one.locationName}" itemValue="#{one.id}"/> 
+								<p:ajax listener="#{registration.districtListForm}" update="alpha"/> 
+								</p:selectOneMenu> 
+								
+								<p:selectOneMenu id="alpha" value="#{registration.district1}" style="width:90%;margin-top:20px;">
+								<f:selectItem itemLabel="select district" noSelectionOption="true"/> 
+								<f:selectItems value="#{registration.districtList}" var="district" itemLabel="#{district.locationName}" itemValue="#{district.id}"/> 
+								</p:selectOneMenu> 
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText  value="#{registration.customer.username}"/>
+									<label>Username</label>
+								</h:panelGroup>
+
+								<h:panelGroup styleClass="md-inputfield">
+									<p:password value="#{registration.customer.password}" />
+									<label>Password</label>
+								</h:panelGroup>
+								
+								<h:panelGroup styleClass="md-inputfield">
+									<p:password value="#{registration.confirm}" />
+									<label>Confirm</label>
+								</h:panelGroup>
+
+							</p:panelGrid>
+							<p:commandButton action="#{registration.registerCustomer}"
+								value="Register" icon="ui-icon-check"
+								style="float:right;margin-right:20px;" update="msg1 @all" />
+
+						</p:panel>
+					</p:fieldset>
+				
+		</p:dialog>
+		<p:dialog widgetVar="created" showEffect="clip" hideEffect="clip"
+			width="600" height="500" modal="true"
+			header="Fill all Information About new Account">
+				<img src="./resources/demo/images/logo.jpg" width="100%" height="120px;"/>
+					<p:fieldset legend="Fill Required Info">
+						<p:messages id="msg" closable="true" autoUpdate="true"
+				showDetail="true" />
+					</p:fieldset>
+				
+		</p:dialog>
+	</h:form>
+	<h:form>
+	<p:dialog widgetVar="employee" showEffect="clip" hideEffect="clip"
+			width="600" height="500" modal="true"
+			header="Fill all Information About new Account">
+				<img src="./resources/demo/images/logo.jpg" width="100%" height="120px;"/>
+					<p:fieldset legend="Fill Required Info">
+						<p:messages id="msgs" closable="true" autoUpdate="true"
+				showDetail="true" />
+						<p:panel toggleable="true" closable="true">
+							<h4 style="text-align: center; font-weight: bold;">CREATE
+								ACCOUNT</h4>
+
+							<p:panelGrid columns="2" layout="grid"
+								styleClass="ui-panelgrid-blank form-group" style="padding:20px;">
+
+								
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText value="#{registration.employee.phoneNumber}"/>
+									<label>Phone Number</label>
+								</h:panelGroup>
+								
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText  value="#{registration.employee.username}"/>
+									<label>Username</label>
+								</h:panelGroup>
+
+								<h:panelGroup styleClass="md-inputfield">
+									<p:password value="#{registration.employee.password}" />
+									<label>Password</label>
+								</h:panelGroup>
+								
+								<h:panelGroup styleClass="md-inputfield">
+									<p:password value="#{registration.confirm}" />
+									<label>Confirm</label>
+								</h:panelGroup>
+
+							</p:panelGrid>
+							<p:commandButton action="#{registration.createAccountByEmployee()}"
+								value="Register" icon="ui-icon-check"
+								style="float:right;margin-right:20px;" update="msgs @all" />
+
+						</p:panel>
+					</p:fieldset>
+				
+		</p:dialog>
+	</h:form>
+        <div class="login-footer">MTN Rwanda</div>
+        
+        <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="ultima-layout" />
+    </h:body>
+
+</html>

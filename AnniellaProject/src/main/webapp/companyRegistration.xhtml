@@ -1,0 +1,162 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                <h:form >
+               <p:messages showDetail="true" autoUpdate="true" closable="true"/>
+                    <p:tabView>
+						<p:tab title="Department">
+						<p:commandButton value="register" icon="fa fa-plus" oncomplete="PF('department').show()" update="@widgetVar(department)"/>
+						<p:dataTable value="#{registration.departmentList}" var="dept"
+							id="tab" style="margin-top:15px;">
+							<p:column headerText="No" style="width:80px;">
+								#{i=i+1}
+							</p:column>
+							<p:column headerText="Department Name">
+							<center>#{dept.name}</center>
+							</p:column>
+							
+						</p:dataTable>
+						</p:tab>
+						<p:tab title="Groups">
+						<p:commandButton value="register" icon="fa fa-plus" oncomplete="PF('group').show()" update="@widgetVar(group)"/>
+						<p:dataTable value="#{registration.groupList}" var="group"
+							id="tab1" style="margin-top:15px;">
+							<p:column headerText="No" style="width:80px;">
+								#{i=i+1}
+							</p:column>
+							<p:column headerText="Group Category">
+							#{group.name}
+							</p:column>
+							<p:column headerText="Department">
+							#{group.department.name}
+							</p:column>
+							<p:column headerText="Option" width="40">
+							<p:inputSwitch value="#{group.status}">
+									<p:ajax listener="#{registration.changeStatus(group)}"
+										update="tab1" />
+								</p:inputSwitch>
+							</p:column>
+						</p:dataTable>
+						</p:tab>
+						<p:tab title="Employee">
+						<p:commandButton value="register" icon="fa fa-plus" oncomplete="PF('employ').show()" update="@widgetVar(employ)"/>
+						<p:dataTable value="#{registration.employeeList}" var="emp"
+							id="tab2" style="margin-top:15px;">
+							<p:column headerText="No" style="width:80px;">
+								#{i=i+1}
+							</p:column>
+							<p:column headerText="Employee Name">
+								#{emp.firstName} #{emp.lastName}
+							</p:column>
+							<p:column headerText="Email">
+								#{emp.email}
+							</p:column>
+							<p:column headerText="Phone Number">
+								#{emp.phoneNumber}
+							</p:column>
+							<p:column headerText="Group">
+								#{emp.groups.name}
+							</p:column>
+						</p:dataTable>
+						</p:tab>
+					</p:tabView>
+					</h:form>
+					<h:form>
+					<p:dialog widgetVar="department" showEffect="clip" hideEffect="clip" modal="true"
+			header="register new Department">
+
+							<p:panelGrid columns="2" layout="grid"
+								styleClass="ui-panelgrid-blank form-group" style="padding:20px;">
+								
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText value="#{registration.department.name}"   style="width:100px;"/>
+									<label>Department</label>
+								</h:panelGroup>
+								
+							</p:panelGrid>
+							<p:commandButton
+								value="Register" action="#{registration.registerDepartment()}" update="@all" oncomplete="PF('department').hide()" icon="ui-icon-check"
+								style="float:right;margin-right:20px;"/>
+
+						
+				
+		</p:dialog>
+					</h:form>
+					<h:form>
+					<p:dialog widgetVar="group" showEffect="clip" hideEffect="clip" modal="true"
+			header="register new Groups" width="600px">
+
+							<p:panelGrid columns="2" layout="grid"
+								styleClass="ui-panelgrid-blank form-group" style="padding:20px;">
+								
+								
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText value="#{registration.group.name}"   style="width:100px;"/>
+									<label>Group Name</label>
+								</h:panelGroup>
+								
+								<p:selectOneMenu value="#{registration.department.id}"> 
+ 								<f:selectItem itemLabel="select Department" noSelectionOption="true"/> 
+								<f:selectItems value="#{registration.departmentList}" var="one" itemLabel="#{one.name}" itemValue="#{one.id}"/> 
+								</p:selectOneMenu>
+							</p:panelGrid>
+							<p:commandButton
+								value="Register" action="#{registration.registerGroup()}" update="@all" oncomplete="PF('group').hide()" icon="ui-icon-check"
+								style="float:right;margin-right:20px;"/>
+
+						
+				
+		</p:dialog>
+					</h:form>
+					<h:form>
+					<p:dialog widgetVar="employ" showEffect="clip" hideEffect="clip" modal="true"
+			header="register new Groups" width="600px">
+
+							<p:panelGrid columns="2" layout="grid"
+								styleClass="ui-panelgrid-blank form-group" style="padding:20px;">
+								
+								
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText value="#{registration.employee.firstName}"   style="width:100px;"/>
+									<label>First Name</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText value="#{registration.employee.lastName}"   style="width:100px;"/>
+									<label>Last Name</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText value="#{registration.employee.email}"   style="width:100px;"/>
+									<label>Email</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText value="#{registration.employee.phoneNumber}"   style="width:100px;"/>
+									<label>Phone Number</label>
+								</h:panelGroup>
+								<p:selectOneMenu value="#{registration.group.id}"> 
+ 								<f:selectItem itemLabel="select Group" noSelectionOption="true"/> 
+								<f:selectItems value="#{registration.groupList}" var="one" itemLabel="#{one.name}" itemValue="#{one.id}"/> 
+								</p:selectOneMenu>
+							</p:panelGrid>
+							<p:commandButton
+								value="Register" action="#{registration.registerEmployee()}" update="@all" oncomplete="PF('employ').hide()" icon="ui-icon-check"
+								style="float:right;margin-right:20px;"/>
+
+						
+				
+		</p:dialog>
+					</h:form>
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

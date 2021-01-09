@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pu="http://primefaces.org/ultima">
+
+	<h:form id="menuform">
+		<div class="layout-menu #{guestPreferences.menuClass}">
+			<div class="nano">
+				<div class="nano-content menu-scroll-content">
+					<ui:fragment
+						rendered="#{guestPreferences.profileMode == 'inline' and guestPreferences.menuLayout != 'menu-layout-static menu-layout-horizontal'}">
+						<div class="profile">
+							<div class="profile-image"></div>
+							<a id="profile-options" href="#"> <span class="profile-name">#{loginController.username}</span>
+								<i class="material-icons">&#xE313;</i>
+							</a>
+						</div>
+
+						<ul id="profile-menu" class="ultima-menu">
+
+							<li role="menuitem"><p:commandLink class="ripplelink"
+									action="#{loginController.logout}">
+									<i class="material-icons">&#xE8AC;</i>
+									<span>Logout</span>
+								</p:commandLink></li>
+						</ul>
+					</ui:fragment>
+					<h:form>
+						<h:panelGroup>
+						<h:panelGroup rendered="#{loginController.admimLogin == true}">
+								<pu:menu widgetVar="me">
+									<p:menuitem  value="Employee Details" icon="&#xE871;"
+										 />
+								</pu:menu>
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{loginController.employee.groups.status == true}">
+								<pu:menu widgetVar="me">
+									<p:menuitem  value="Customer Issues"
+										icon="&#xE0C9;" />
+								</pu:menu>
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{loginController.employee.groups.status == false}">
+								<pu:menu widgetVar="me">
+									<p:menuitem  value="Service DESK Issues"
+										icon="&#xE869;" />
+								</pu:menu>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{loginController.customerLogin == true}">
+								<pu:menu widgetVar="me">
+									<p:menuitem  value="Issues" icon="&#xE880;"
+										outcome="/dashboard" />
+
+								</pu:menu>
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</h:form>
+</ui:composition>

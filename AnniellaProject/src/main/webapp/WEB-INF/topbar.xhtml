@@ -1,0 +1,34 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pu="http://primefaces.org/ultima">
+
+	<div class="topbar clearfix" style="background-color: #FFBF00;">
+		<div class="topbar-left" style="background-image:url('./resources/demo/images/logo.jpg'); background-repeat: no-repeat; background-size: 250px 80px;" >
+			
+		</div>
+	
+		<div class="topbar-right">
+			<a id="menu-button" href="#"> <i></i>
+			</a> <a id="topbar-menu-button" href="#"> <i class="material-icons">&#xE5D2;</i>
+			</a>
+			 <img align="middle" src="./resources/demo/images/topbar.jpg" height="55" width="650" style="background-repeat: no-repeat;"/>
+			  <ul class="topbar-items fadeInDown animated">
+                <ui:fragment rendered="#{guestPreferences.profileMode == 'overlay'||guestPreferences.menuLayout == 'menu-layout-static menu-layout-horizontal'}">
+                    
+                </ui:fragment>
+                
+                <li>
+                   <h2 style="color: white">MTN RWANDA PLATFORM ISSUES</h2>
+                </li>
+               
+               
+            </ul>
+		</div>
+		
+		
+	</div>
+
+</ui:composition>

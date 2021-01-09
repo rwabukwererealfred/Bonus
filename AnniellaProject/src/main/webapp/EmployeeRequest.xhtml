@@ -1,0 +1,243 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<h:form>
+					<p:messages showDetail="true" autoUpdate="true" closable="true" />
+					<p:tabView>
+						<p:tab title="New Request">
+
+
+							<div class="card">
+
+								<p:dataTable value="#{loginController.employeePendingRequest}"
+									selection="#{loginController.selectedRequestList}"
+									rowKey="#{req.id}" var="req" id="tab" style="margin-top:15px;">
+									<p:column style="width:80px;" selectionMode="multiple">
+
+									</p:column>
+									<p:column headerText="#ID" width="80">
+									<center>#{req.id}</center>
+								</p:column>
+									<p:column headerText="Names">
+										<center>#{req.request.customer.firstName}
+											#{req.request.customer.lastName}</center>
+									</p:column>
+									<p:column headerText="Phone Number">
+										<center>#{req.request.customer.phoneNumber}</center>
+									</p:column>
+									<p:column headerText="Email">
+										<center>#{req.request.customer.email}</center>
+									</p:column>
+									<p:column headerText="Request Date">
+										<center>#{req.requestDate}</center>
+									</p:column>
+									<p:column headerText="Details" style="width:240px;">
+										<center>
+											<p:commandLink update="@widgetVar(description)"
+												action="#{registration.showDescription(req.request)}">
+												<i class="fa fa-list"></i>
+												<span>Customer Issues</span>
+											</p:commandLink>
+											<p:commandLink action="#{registration.showRequest(req.request.id)}"
+											update="@widgetVar(descriptions)"
+											oncomplete="PF('descriptions').show()">
+											<i class="fa fa-list"></i>
+											<span>Description</span>
+										</p:commandLink>
+										</center>
+									</p:column>
+								</p:dataTable>
+
+
+
+							</div>
+							<div class="card" style="height: 400px;">
+								<p:selectOneMenu value="#{loginController.status}">
+									<f:selectItem itemLabel="select Status"
+										noSelectionOption="true" />
+									<f:selectItem itemValue="Pending" itemLabel="Pending" />
+									<f:selectItem itemValue="Closed" itemLabel="Closed" />
+									<p:ajax update="st" />
+								</p:selectOneMenu>
+								<p:spacer width="20" />
+								<h:panelGroup id="st">
+									<h:panelGroup rendered="#{loginController.status == 'Pending'}">
+										<p:selectOneMenu value="#{registration.department.id}">
+											<f:selectItem itemLabel="select Department"
+												noSelectionOption="true" />
+											<f:selectItems value="#{registration.departmentList}"
+												var="one" itemLabel="#{one.name}" itemValue="#{one.id}" />
+											<p:ajax update="gr" listener="#{registration.findGroups}" />
+										</p:selectOneMenu>
+										<p:spacer width="20" />
+										<p:selectOneMenu value="#{registration.group.id}" id="gr">
+											<f:selectItem itemLabel="select Group"
+												noSelectionOption="true" />
+											<f:selectItems value="#{registration.groupListByDepartment}"
+												var="one" itemLabel="#{one.name}" itemValue="#{one.id}" />
+											<p:ajax update="emp" listener="#{registration.findEmployee}" />
+										</p:selectOneMenu>
+										<p:spacer width="20" />
+										<p:selectOneMenu value="#{loginController.selectedEmployee}"
+											id="emp">
+											<f:selectItem itemLabel="select Employee"
+												noSelectionOption="true" />
+											<f:selectItems value="#{registration.employeesByGroups}"
+												var="one" itemLabel="#{one.firstName} #{one.lastName}"
+												itemValue="#{one.id}" />
+										</p:selectOneMenu>
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<p:fieldset legend="content">
+									<p:inputTextarea rows="10"
+										value="#{loginController.response.description}" cols="30"
+										counter="display" maxlength="750"
+										counterTemplate="{0} characters remaining." autoResize="false"
+										style="width:98%;" />
+								</p:fieldset>
+								<h:outputText id="display" />
+								<p:commandButton value="Send"
+									action="#{loginController.employeeSendRequest}" ajax="false"
+									icon="fa fa-send" style="float:right; margin-top:10px;" />
+
+							</div>
+						</p:tab>
+						<p:tab title="Closed Request">
+							<p:dataTable value="#{loginController.employeeClosedRequest}"
+								var="req" id="tab1" style="margin-top:15px;">
+									<p:column headerText="#ID" width="80">
+									<center>#{req.request.id}</center>
+								</p:column>
+								<p:column headerText="Names">
+									<center>#{req.request.customer.firstName}
+										#{req.request.customer.lastName}</center>
+								</p:column>
+								<p:column headerText="Phone Number">
+									<center>#{req.request.customer.phoneNumber}</center>
+								</p:column>
+								<p:column headerText="Email">
+									<center>#{req.request.customer.email}</center>
+								</p:column>
+								<p:column headerText="Request Date">
+									<center>#{req.requestDate}</center>
+								</p:column>
+								<p:column headerText="Details" style="width:240px;">
+									<center>
+										<p:commandLink update="@widgetVar(description)"
+										action="#{registration.showDescription(req.request)}">
+										<i class="fa fa-list"></i>
+											
+											<span>Issues</span>
+										</p:commandLink>
+										<p:commandLink action="#{registration.showRequest(req.request.id)}"
+											update="@widgetVar(descriptions)"
+											oncomplete="PF('descriptions').show()">
+											<i class="fa fa-list"></i>
+											<span>Response</span>
+										</p:commandLink>
+										
+									</center>
+								</p:column>
+							</p:dataTable>
+						</p:tab>
+						<p:tab title="All Request">
+							<p:panelGrid columns="6"
+								styleClass="ui-panelgrid-blank form-group">
+
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText value="#{registration.key}" />
+									<label>Search Request Id</label>
+								</h:panelGroup>
+								<p:commandButton value="Search"
+									action="#{registration.searchId}" icon="fa fa-search"
+									style="float:right;" ajax="false"/><p:spacer width="100"/>
+									<h:panelGroup styleClass="md-inputfield">
+									<p:calendar value="#{reportController.from}" pattern="dd/MM/yyyy" />
+									<label>From</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar value="#{reportController.to}" pattern="dd/MM/yyyy" />
+									<label>To</label>
+								</h:panelGroup>
+								<p:commandButton value="Print" action="#{reportController.report()}"
+									 icon="fa fa-print"
+									style="float:right;" ajax="false"/>
+							</p:panelGrid>
+							<p:dataTable value="#{registration.allRequest}" var="req"
+								id="tab11" style="margin-top:15px;">
+								<p:column headerText="#ID" width="80">
+									<center>#{req.id}</center>
+								</p:column>
+								<p:column headerText="Names">
+									<center>#{req.customer.firstName}
+										#{req.customer.lastName}</center>
+								</p:column>
+								<p:column headerText="Phone Number">
+									<center>#{req.customer.phoneNumber}</center>
+								</p:column>
+								<p:column headerText="Email">
+									<center>#{req.customer.email}</center>
+								</p:column>
+
+								<p:column headerText="Details" style="width:240px;">
+									<center>
+										<p:commandLink action="#{registration.showRequest(req.id)}"
+											update="@widgetVar(descriptions)"
+											oncomplete="PF('descriptions').show()">
+											<i class="fa fa-list"></i>
+											<span>Employee</span>
+										</p:commandLink>
+
+									</center>
+								</p:column>
+							</p:dataTable>
+						</p:tab>
+					</p:tabView>
+				</h:form>
+				<h:form>
+					<p:dialog widgetVar="descriptions" showEffect="clip" width="500"
+						hideEffect="clip" modal="true" header="Employes Requests Info">
+
+						<p:dataTable value="#{registration.findByEmployeeRequest}"
+							var="req" id="tab11" style="margin-top:15px;">
+
+							<p:column headerText="Names">
+								<center>#{req.employee.firstName}
+									#{req.employee.lastName}</center>
+							</p:column>
+							<p:column headerText="From">
+								<center>#{req.employee.groups.name}
+									</center>
+							</p:column>
+							<p:column headerText="Comments">
+								<center>#{registration.findEmployeeResponse(req.employee,req)}</center>
+							</p:column>
+						</p:dataTable>
+					</p:dialog>
+					<p:dialog widgetVar="description" showEffect="clip"
+						hideEffect="clip" modal="true" header="issues from Customer">
+						<p:panelGrid columns="2"
+							styleClass="ui-panelgrid-blank form-group">
+							<h3>Title:</h3>
+							<p:outputLabel value="#{registration.subject}" />
+						</p:panelGrid>
+						<p:fieldset legend="content">
+							<p:outputLabel value="#{registration.description}" />
+						</p:fieldset>
+
+					</p:dialog>
+
+				</h:form>
+			</div>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

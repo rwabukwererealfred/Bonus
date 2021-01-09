@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<h:form>
+			<p:messages showDetail="true" autoUpdate="true" closable="true" />
+			<div class="ui-g">
+
+				<div class="ui-g-12 ui-lg-6">
+					<div class="card" style="height: 400px;">
+					<h:panelGrid columns="2">
+					<p:selectOneMenu id="emp"
+									value="#{commonQuestion.key}">
+									<f:selectItem itemLabel="Select Request Title"
+										noSelectionOption="true" />
+									<f:selectItems value="#{commonQuestion.questions()}" var="one" itemLabel="#{one}" itemValue="#{one}" />
+									
+									<f:selectItem itemLabel="Other" itemValue="Other" />
+									<p:ajax update="title tit" />
+					</p:selectOneMenu>
+					<h:panelGroup id="tit">
+							<h:panelGroup
+									rendered="#{commonQuestion.key != '' and commonQuestion.key != 'Other'}">
+									
+										<p:commandButton value="Result" oncomplete="PF('result').show()" update="@widgetVar(result)" action="#{commonQuestion.answerResult()}"
+							icon="fa fa-send" style="float:right; margin-top:10px;" />
+									
+					
+							</h:panelGroup>
+							</h:panelGroup>
+					
+					</h:panelGrid>
+					<h:panelGroup id="title">
+								<h:panelGroup
+									rendered="#{commonQuestion.key =='Other'}">
+						<p:fieldset legend="Title">
+							<p:panelGrid columns="2" layout="grid"
+								styleClass="ui-panelgrid-blank form-group">
+								
+									<p:inputText style="width:98%;"
+										value="#{loginController.request.subject}"
+										placeholder="Type Subject" />
+								
+							</p:panelGrid>
+						</p:fieldset>
+						
+						<p:fieldset legend="content">
+							<p:inputTextarea rows="10"
+								value="#{loginController.request.description}" cols="30"
+								counter="display" maxlength="750"
+								counterTemplate="{0} characters remaining." autoResize="false"
+								style="width:98%;" />
+						</p:fieldset>
+						<h:outputText id="display" />
+						<p:commandButton value="Send"
+							action="#{loginController.sendRequest()}" ajax="false"
+							icon="fa fa-send" style="float:right; margin-top:10px;" />
+							</h:panelGroup>
+								</h:panelGroup>
+
+					</div>
+				</div>
+				<div class="ui-g-12 ui-lg-6">
+					<div class="card" style="height: 400px;">
+						<p:dataTable value="#{loginController.requestList}" var="dept"
+							id="tab" style="margin-top:15px;">
+							<p:column headerText="No" style="width:20px;">
+								#{i=i+1}
+							</p:column>
+							<p:column headerText="Title">
+								<center>#{dept.subject}</center>
+							</p:column>
+							<p:column headerText="Description">
+							#{dept.description}
+							</p:column>
+							<p:column headerText="Status" style="width:60px;">
+								<center style="background-color: green; color: yellow">
+									#{dept.status}</center>
+							</p:column>
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+
+		</h:form>
+		<h:form>
+			<p:dialog widgetVar="result" showEffect="clip"
+						hideEffect="clip" modal="true" header="Answers">
+						<p:panelGrid columns="2"
+							styleClass="ui-panelgrid-blank form-group">
+							<h3><p:outputLabel value="Please press below number on your phone and follow the instructions" /></h3>
+						</p:panelGrid>
+						<p:fieldset legend="Number">
+						<p:repeat var="one" value="#{commonQuestion.answers}">
+							<p:outputLabel value="#{one}"/>
+						</p:repeat>
+						</p:fieldset>
+
+					</p:dialog>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
